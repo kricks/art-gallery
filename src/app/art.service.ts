@@ -4,7 +4,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class GalleryService {
     private gallery: Gallery[] = [];
@@ -33,7 +33,7 @@ export class GalleryService {
 
         this.http.post<{ message: string, gallery: Gallery[] }>('http://localhost:3000/art',
         strArt,
-        { headers })
+        { headers: headers})
         .subscribe(
           (res) => {
             this.gallery = res.gallery;

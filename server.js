@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 var index = require('./server/routes/app');
 
 // ... ADD CODE TO IMPORT YOUR ROUTING FILES HERE ... 
-const galleryRoutes = require('./routes/gallery');
+const galleryRoutes = require('./server/routes/gallery');
 
 // establish a connection to the mongo database
 // *** Important *** change yourPort and yourDatabase
@@ -52,18 +52,18 @@ app.use((req, res, next) => {
 
 // Tell express to use the specified director as the
 // root directory for your web site
-app.use(express.static(path.join(__dirname, 'dist/cms')));
+app.use(express.static(path.join(__dirname, 'dist/final')));
 
 // Tell express to map the default route ("/") to the index route
 app.use('/', index);
 
 // ... ADD YOUR CODE TO MAP YOUR URL'S TO ROUTING FILES HERE ...
 app.use('/', index);
-const galleryRoutes = require('./routes/gallery'); 
+app.use('/art', galleryRoutes); 
 
 // Tell express to map all other non-defined routes back to the index page
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/cms/index.html'));
+  res.sendFile(path.join(__dirname, 'dist/final/index.html'));
 });
 
 // Define the port address and tell express to use this port
@@ -75,5 +75,3 @@ const server = http.createServer(app);
 
 // Tell the server to start listening on the provided port
 server.listen(port, function () { console.log("API running on localhost: " + port) });
-
-
