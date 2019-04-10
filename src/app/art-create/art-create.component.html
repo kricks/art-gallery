@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+      <form id="art-create">
+        <div class="row">
+  
+          <div class="col-sm-12 form-group">
+            <label for="">Title</label>
+            <input type="text" id="title" class="form-control" size="120" max="120" #title>
+          </div>
+
+          <div class="col-sm-12">
+           <input type="file">
+            <!-- <button class="btn btn-primary" type="button" (click)="filePicker.click()">Select an Image</button>
+            <input type="file" #filePicker (change)="onImageChange($event)"> -->
+          </div>
+          <div class="col-sm-12 form-group">
+            <label for="">Description</label>
+            <input type="text" id="description" class="form-control" size="120" max="255" #description>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 btn-toolbar">
+            <button class="btn btn-success" type="button" > Send </button>
+            <button class="btn btn-success" type="button" > Clear </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
