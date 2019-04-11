@@ -1,6 +1,7 @@
-// import { GalleryService } from './../art.service';
+import { ArtService } from './../art.service';
 import { Gallery } from './../gallery.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-art-list',
@@ -9,18 +10,26 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 })
 export class ArtListComponent implements OnInit, OnDestroy {
   gallery: Gallery[] = [];
+  isLoad = false;
+  subs: Subscription;
 
-  constructor() { }
-  // public galleryService: GalleryService
+  constructor(public artService: ArtService) { }
   ngOnInit() {
+    this.isLoad = true;
+    this.artService.getGallery();
+    this.subs = this.artService.getArtUpdateListener()
+      .subscribe((gallery: Gallery[]) => {
+        this.isLoad = false;
+        this.gallery = gallery;
+      });
   }
 
   ngOnDestroy() {
-
+    this.subs.unsubscribe();
   }
 
-  onDelete() {
-
+  onDelete(artId: string) {
+    this.artService.deleteArt(artId);
   }
 
 }

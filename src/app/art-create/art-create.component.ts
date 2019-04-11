@@ -1,8 +1,9 @@
-import { Gallery } from './../gallery.model';
+import { ArtService } from './../art.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router, Params } from '@angular/router';
+
+import { ActivatedRoute, Router, Params, ParamMap } from '@angular/router';
+import { Gallery } from '../gallery.model';
 
 @Component({
   selector: 'app-art-create',
@@ -11,73 +12,83 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class ArtCreateComponent implements OnInit {
   gallery: Gallery;
-  orignalArt: Gallery;
-  editMode = false;
-  id: string;
+  isLoad = false;
+  form: FormGroup;
+  imagePreview: string;
+  artId: string;
+  mode = 'create';
 
+  // @ViewChild('title') titleInputRef: ElementRef;
+  // @ViewChild('image') imageInputRef: ElementRef;
+  // @ViewChild('description') descriptionInputRef: ElementRef;
 
-  @ViewChild('title') titleInputRef: ElementRef;
-  @ViewChild('image') imageInputRef: ElementRef;
-  @ViewChild('description') descriptionInputRef: ElementRef;
-
-  constructor(private galleryService: Gallery,
+  constructor(private artService: ArtService,
               private router: Router,
               private route: ActivatedRoute) { }
 
 ngOnInit() {
-  this.route.params
-    .subscribe(
-      (params: Params) => {
-        this.id = params['id'];
-        if (this.id === null || this.id === undefined) {
-          this.editMode = false;
-          return;
-        }
-        this.orignalArt = this.galleryService.getArt(this.id);
-        if (this.orignalArt === undefined || this.orignalArt === null) {
-          this.editMode = false;
-          return;
-        }
-        this.editMode = true;
-        this.gallery = JSON.parse(JSON.stringify(this.orignalArt));
+  // const title = this.titleInputRef.nativeElement.value;
+  // const image = this.imageInputRef.nativeElement.value;
+  // const description = this.descriptionInputRef.nativeElement.value;
+
+  this.route.paramMap.subscribe((paramMap: ParamMap) => {
+    if (paramMap.has('artId')) {
+      this.mode = 'edit';
+      this.artId = paramMap.get('artId');
+      this.isLoad = true;
+      this.artService.getArt(this.artId).subscribe(art => {
+        this.isLoad = false;
+        this.gallery = {
+          id: art.id,
+          imagePath: art.imagePath,
+          title: art.title,
+          description: art.description
+        };
+        this.form.setValue({
+          imagePath: art.imagePath,
+          title: art.title,
+          description: art.description
+        });
       });
+    } else {
+      this.mode = 'create';
+      this.artId = null;
+    }
+  });
 }
 
   onSave(form: NgForm) {
-    const title = this.titleInputRef.nativeElement.value;
-    const image = this.imageInputRef.nativeElement.value;
-    const description = this.descriptionInputRef.nativeElement.value;
-    const value = form.value;
-    const newArt = new Gallery(value.id, value.title, value.description, value.imagePath);
-
-    if (this.editMode === true) {l
-      this.galleryService.updateArt(this.orignalArt, newArt);
-    } else {
-      this.galleryService.addArt(newArt);
+    if (this.form.invalid) {
+      return;
     }
-
+    this.isLoad = true;
+    if (this.mode === 'create') {
+      this.artService.addArt(
+        this.form.value.image,
+        this.form.value.title,
+        this.form.value.description
+      );
+    } else {
+      this.artService.updateArt(
+        this.artId,
+        this.form.value.image,
+        this.form.value.title,
+        this.form.value.description
+      );
+    }
+    // this.form.reset();
+    // this.router.navigate(['/gallery']);
   }
 
-  onClear() {
-    this.titleInputRef.nativeElement.value = '';
-    this.imageInputRef.nativeElement.value = '';
-    this.descriptionInputRef.nativeElement.value = '';
+  // onClear() {
+  //   this.titleInputRef.nativeElement.value = '';
+  //   this.imageInputRef.nativeElement.value = '';
+  //   this.descriptionInputRef.nativeElement.value = '';
 
-  }
+  // }
 
   onCancel() {
     this.router.navigate(['/gallery']);
   }
-
-  // onImagePicked(event: Event) {
-  //   const file = (event.target as HTMLInputElement).files[0];
-  //   this.form.patchValue({ image: file });
-  //   this.form.get('image').updateValueAndValidity();
-  //   const reader = new FileReader();
-  //   reader.onload = () => {
-  //     this.imagePreview = reader.result;
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
-
 }
+

@@ -60,6 +60,7 @@ app.use('/', index);
 // ... ADD YOUR CODE TO MAP YOUR URL'S TO ROUTING FILES HERE ...
 app.use('/', index);
 app.use('/art', galleryRoutes); 
+app.use("/images", express.static(path.join('server/images')));
 
 // Tell express to map all other non-defined routes back to the index page
 app.get('*', (req, res) => {
