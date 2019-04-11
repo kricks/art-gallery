@@ -15,8 +15,28 @@ export class GalleryService {
                 private galleryService: GalleryService) {}
 
     // get gallery
+    getDocuments() {
+      this.http.get<{ message: string, documents: Gallery[] }>('http://localhost:3000/documents')
+        .subscribe(
+          (res) => {
+            this.gallery = res.documents;
+            this.gallery.sort((a, b) => (a.title < b.title) ? 1 : (a.title > b.title) ? -1 : 0);
+            this.galleryUpdated.next(this.gallery.slice());
+          }, (error: any) => {
+            console.log('something bad happened...');
+          }
+        );
+    }
 
     // get art
+    getArt(id: string): Gallery {
+        for (const gallery of this.gallery) {
+          if (gallery.id === id) {
+            return gallery;
+          }
+        }
+        return null;
+      }
 
     // add art
     addArt(newArt: Gallery) {
@@ -33,7 +53,7 @@ export class GalleryService {
 
         this.http.post<{ message: string, gallery: Gallery[] }>('http://localhost:3000/art',
         strArt,
-        { headers: headers})
+        { headers })
         .subscribe(
           (res) => {
             this.gallery = res.gallery;

@@ -9,7 +9,7 @@
           </div>
 
           <div class="col-sm-12">
-           <input type="file">
+           <input type="file" id="image" class="form-control" size="120" max="255" #image>
             <!-- <button class="btn btn-primary" type="button" (click)="filePicker.click()">Select an Image</button>
             <input type="file" #filePicker (change)="onImageChange($event)"> -->
           </div>
@@ -20,8 +20,9 @@
         </div>
         <div class="row">
           <div class="col-xs-12 btn-toolbar">
-            <button class="btn btn-success" type="button" > Send </button>
-            <button class="btn btn-success" type="button" > Clear </button>
+            <button class="btn btn-success" type="button" (click)="onSave()"> Send </button>
+            <button class="btn btn-warning" type="button" (click)="onClear()"> Clear Form </button>
+            <button class="btn btn-danger" type="button" (click)="onCancel()"> Cancel </button>
           </div>
         </div>
       </form>
