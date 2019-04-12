@@ -1,3 +1,5 @@
+// import * as galleryRoutes from './server/routes/gallery';
+
 // Get dependencies
 var express = require('express');
 var path = require('path');
@@ -21,8 +23,11 @@ mongoose.connect("mongodb+srv://kricks41:94U39wabthLfhBX4@cluster0-hfir1.mongodb
     if (err) {
       console.log("Connection failed");
     }
-    else {
+    else if (res) {
       console.log('Connected to database');
+    }
+    else {
+      console.log("FAIL");
     }
   }
 )
@@ -59,7 +64,7 @@ app.use('/', index);
 
 // ... ADD YOUR CODE TO MAP YOUR URL'S TO ROUTING FILES HERE ...
 app.use('/', index);
-app.use('/art', galleryRoutes); 
+app.use('/arts', galleryRoutes); 
 app.use("/images", express.static(path.join('server/images')));
 
 // Tell express to map all other non-defined routes back to the index page
@@ -67,7 +72,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/final/index.html'));
 });
 
-// Define the port address and tell express to use this port
+// Define the port address and tell express to use this port  
 const port = process.env.PORT || '3000';
 app.set('port', port);
 

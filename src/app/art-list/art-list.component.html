@@ -1,15 +1,19 @@
 <div class="row">
-  <div class="col-sm-6 col-md-4" *ngFor="let art of gallery">
+  <div class="col-sm-6" *ngFor="let art of gallery">
     <div class="thumbnail">
-      <img [src]="art.imagePath" [alt]="art.title">
+        <div class="art-image">
+            <img src="{{art.imagePath}}" [alt]="art.title">
+        </div>
       <div class="caption">
-        <h3>{{art.title}}</h3>
-        <p>{{art.description}}</p>
-        <p>
-          <a class="btn btn-primary" [routerLink]="['/edit', art.id]">Edit</a> 
-          <a class="btn btn-danger" (click)="onDelete(art.id)">Delete</a>
-        </p>
+        <h3>{{ art.title }}</h3>
+        <p> {{ art.description }}</p>
+
+        <div class="btn-toolbar">
+          <a class="btn btn-primary" [routerLink]="['/edit', art.id]">EDIT</a> 
+          <a class="btn btn-danger" (click)="onDelete(art.id)">DELETE</a>
+        </div>
       </div>
     </div>
+
   </div>
 </div>

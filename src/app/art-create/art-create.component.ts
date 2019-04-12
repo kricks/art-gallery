@@ -16,7 +16,9 @@ export class ArtCreateComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
   artId: string;
+  editMode = true;
   mode = 'create';
+  originalArt: Gallery;
 
   // @ViewChild('title') titleInputRef: ElementRef;
   // @ViewChild('image') imageInputRef: ElementRef;
@@ -31,18 +33,27 @@ ngOnInit() {
   // const image = this.imageInputRef.nativeElement.value;
   // const description = this.descriptionInputRef.nativeElement.value;
 
+  this.gallery = {
+    id: '',
+    imagePath: '',
+    title: '',
+    description: '',
+    imageFile: null
+  };
+
   this.route.paramMap.subscribe((paramMap: ParamMap) => {
     if (paramMap.has('artId')) {
       this.mode = 'edit';
       this.artId = paramMap.get('artId');
       this.isLoad = true;
-      this.artService.getArt(this.artId).subscribe(art => {
+      this.artService.getArt(this.artId).subscribe((art: Gallery) => {
         this.isLoad = false;
         this.gallery = {
           id: art.id,
           imagePath: art.imagePath,
           title: art.title,
-          description: art.description
+          description: art.description,
+          imageFile: art.imageFile
         };
         this.form.setValue({
           imagePath: art.imagePath,
@@ -57,27 +68,42 @@ ngOnInit() {
   });
 }
 
-  onSave(form: NgForm) {
-    if (this.form.invalid) {
-      return;
-    }
-    this.isLoad = true;
-    if (this.mode === 'create') {
-      this.artService.addArt(
-        this.form.value.image,
-        this.form.value.title,
-        this.form.value.description
-      );
+  onSubmit(form: NgForm) {
+
+    const value = form.value;
+    const newArt = new Gallery(value.id, value.imagePath, value.title, value.description, null);
+    console.log(newArt);
+    if (this.editMode === true) {
+      this.artService.updateArt(this.originalArt, newArt);
     } else {
-      this.artService.updateArt(
-        this.artId,
-        this.form.value.image,
-        this.form.value.title,
-        this.form.value.description
-      );
+      this.artService.addArt(newArt);
     }
+
+    // console.log("MODE", this.mode);
+
+    // if (this.mode === 'create') {
+    //   this.artService.addArt(
+    //     {
+    //       id: '',
+    //       imagePath: this.gallery.imagePath,
+    //      imageFile: this.gallery.imageFile,
+    //       title: this.gallery.title,
+    //       description: this.gallery.description
+    //   }
+    //   );
+
+    //   console.log(  , this.artService);
+    // } else {
+    //   this.artService.updateArt(
+    //     this.artId,
+    //     this.gallery.imagePath,
+    //     this.gallery.imageFile,
+    //     this.gallery.title,
+    //     this.gallery.description
+    //   );
+    // }
     // this.form.reset();
-    // this.router.navigate(['/gallery']);
+    this.router.navigate(['/gallery']);
   }
 
   // onClear() {

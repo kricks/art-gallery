@@ -7,7 +7,7 @@ const routes: Routes = [
   {path: '', redirectTo: '/gallery', pathMatch: 'full'},
   { path: 'gallery', component: ArtListComponent },
   { path: 'create', component: ArtCreateComponent },
-  { path: 'edit/:artId', component: ArtListComponent },
+  { path: 'edit/:artId', component: ArtCreateComponent },
 ];
 
 @NgModule({

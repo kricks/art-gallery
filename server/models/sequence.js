@@ -9,4 +9,4 @@ var schema = new Schema({
     maxContactId: {type: Number, required: true}
 });
 
-module.exports = mongoose.model('Sequence', schema);
+module.exports = mongoose.model('Sequence', schema);        
