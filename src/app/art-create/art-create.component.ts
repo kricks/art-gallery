@@ -16,7 +16,7 @@ export class ArtCreateComponent implements OnInit {
   form: FormGroup;
   imagePreview: string;
   artId: string;
-  editMode = true;
+  editMode = false;
   mode = 'create';
   originalArt: Gallery;
 
@@ -26,7 +26,15 @@ export class ArtCreateComponent implements OnInit {
 
   constructor(private artService: ArtService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute) {
+                this.gallery = {
+                  id: '',
+                  imagePath: '',
+                  title: '',
+                  description: '',
+                  imageFile: null
+                };
+              }
 
 ngOnInit() {
   // const title = this.titleInputRef.nativeElement.value;
@@ -41,45 +49,61 @@ ngOnInit() {
     imageFile: null
   };
 
-  this.route.paramMap.subscribe((paramMap: ParamMap) => {
-    if (paramMap.has('artId')) {
-      this.mode = 'edit';
-      this.artId = paramMap.get('artId');
-      this.isLoad = true;
-      this.artService.getArt(this.artId).subscribe((art: Gallery) => {
-        this.isLoad = false;
-        this.gallery = {
-          id: art.id,
-          imagePath: art.imagePath,
-          title: art.title,
-          description: art.description,
-          imageFile: art.imageFile
-        };
-        this.form.setValue({
-          imagePath: art.imagePath,
-          title: art.title,
-          description: art.description
-        });
-      });
-    } else {
-      this.mode = 'create';
-      this.artId = null;
+  this.artId = this.route.snapshot.paramMap.get('artId');
+  if (this.artId) {
+    this.mode = 'edit';
+    this.editMode = true;
+
+    for (let i = 0; i < this.artService.gallery.length; i++) {
+      if (this.artService.gallery[i].id === this.artId) {
+        this.gallery = this.artService.gallery[i];
+      }
     }
-  });
+  }
+
+
+  // this.route.paramMap.subscribe((paramMap: ParamMap) => {
+  //   if (paramMap.has('artId')) {
+  //     this.mode = 'edit';
+  //     this.editMode = true;
+  //     this.artId = paramMap.get('artId');
+  //     this.isLoad = true;
+  //     this.artService.getArt(this.artId).subscribe((art: Gallery) => {
+  //       this.isLoad = false;
+  //       this.gallery = {
+  //         id: art.id,
+  //         imagePath: art.imagePath,
+  //         title: art.title,
+  //         description: art.description,
+  //         imageFile: art.imageFile
+  //       };
+  //       this.form.setValue({
+  //         imagePath: art.imagePath,
+  //         title: art.title,
+  //         description: art.description
+  //       });
+  //     });
+  //   } else {
+  //     this.mode = 'create';
+  //     this.artId = null;
+  //   }
+  // });
 }
 
-  onSubmit(form: NgForm) {
-
-    const value = form.value;
-    const newArt = new Gallery(value.id, value.imagePath, value.title, value.description, null);
-    console.log(newArt);
+  onSubmit() {
+    // onSubmit(form: NgForm) {
+    // const value = form.value;
+    // const newArt = new Gallery(value.id, value.imagePath, value.title, value.description, null);
+    //// console.log('here');
+    //// console.log(this.gallery);
     if (this.editMode === true) {
-      this.artService.updateArt(this.originalArt, newArt);
+      // this.artService.updateArt(this.originalArt, this.gallery);
+      this.artService.updateArt(this.gallery, this.artId);
     } else {
-      this.artService.addArt(newArt);
+      this.artService.addArt(this.gallery);
     }
 
-    // console.log("MODE", this.mode);
+    // ////console.log("MODE", this.mode);
 
     // if (this.mode === 'create') {
     //   this.artService.addArt(
@@ -92,7 +116,7 @@ ngOnInit() {
     //   }
     //   );
 
-    //   console.log(  , this.artService);
+    //   ////console.log(  , this.artService);
     // } else {
     //   this.artService.updateArt(
     //     this.artId,

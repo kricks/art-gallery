@@ -19,7 +19,7 @@ export class ArtListComponent implements OnInit, OnDestroy {
     this.artService.getGallery();
     this.subs = this.artService.getArtUpdateListener()
       .subscribe((gallery: Gallery[]) => {
-        console.log('test', gallery);
+        //// console.log('test', gallery);
         this.isLoad = false;
         this.gallery = gallery;
       });

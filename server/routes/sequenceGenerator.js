@@ -1,9 +1,7 @@
 
 var Sequence = require('../models/sequence');
 
-var maxDocumentId;
-var maxMessageId;
-var maxContactId;
+var maxArtId;
 var sequenceId = null;
 
 function SequenceGenerator() {
@@ -16,11 +14,10 @@ function SequenceGenerator() {
           error: err
         });
       }
-
+      ////console.log(sequence);
       sequenceId = sequence._id;
-      maxDocumentId = sequence.maxDocumentId;
-      maxMessageId = sequence.maxMessageId;
-      maxContactId = sequence.maxContactId;
+      maxArtId = sequence.maxArtId;
+
     });
 }
 
@@ -30,20 +27,10 @@ SequenceGenerator.prototype.nextId = function (collectionType) {
   var nextId;
 
   switch (collectionType) {
-    case "documents":
-      maxDocumentId++;
-      updateObject = {maxDocumentId: maxDocumentId};
-      nextId = maxDocumentId;
-      break;
-    case "messages":
-      maxMessageId++;
-      updateObject = {maxMessageId: maxMessageId};
-      nextId = maxMessageId;
-      break;
-    case "contacts":
-      maxContactId++;
-      updateObject = {maxContactId: maxContactId};
-      nextId = maxContactId;
+    case "arts":
+    maxArtId++;
+      updateObject = {maxArtId: maxArtId};
+      nextId = maxArtId;
       break;
     default:
       return -1;
@@ -52,7 +39,7 @@ SequenceGenerator.prototype.nextId = function (collectionType) {
   Sequence.update({_id: sequenceId}, {$set: updateObject},
     function (err) {
       if (err) {
-        console.log("nextId error = " + err);
+        ////console.log("nextId error = " + err);
         return null
       }
     });

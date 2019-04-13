@@ -21,13 +21,13 @@ const galleryRoutes = require('./server/routes/gallery');
 mongoose.connect("mongodb+srv://kricks41:94U39wabthLfhBX4@cluster0-hfir1.mongodb.net/final?retryWrites=true",
   { useNewUrlParser: true }, (err, res) => {
     if (err) {
-      console.log("Connection failed");
+      ////console.log("Connection failed");
     }
     else if (res) {
-      console.log('Connected to database');
+      ////console.log('Connected to database');
     }
     else {
-      console.log("FAIL");
+      ////console.log("FAIL");
     }
   }
 )
@@ -80,4 +80,5 @@ app.set('port', port);
 const server = http.createServer(app);
 
 // Tell the server to start listening on the provided port
-server.listen(port, function () { console.log("API running on localhost: " + port) });
+server.listen(port, function () { ////console.log("API running on localhost: " + port) 
+});
