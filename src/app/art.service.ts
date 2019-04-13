@@ -18,23 +18,11 @@ export class ArtService {
       this.maxDocumentId = this.getMaxId();
     }
 
-    // getGallery() {
-    //   this.http.get('http://localhost:3000/art')
-    //   .subscribe(res => {
-    //     ////console.log('res');
-    //     ////console.log(res, typeof res);
-    //     // this.gallery = res
-    //     // this.galleryEventChanged.next([...this.gallery]);
-    //   });
-    // }
-
     getGallery() {
       this.http.get<{ message: string, gallery: Gallery[] }>('http://localhost:3000/arts')
         .subscribe(
           (res) => {
             this.gallery = res.gallery;
-            // this.gallery.sort((a, b) => (a.title < b.title) ? 1 : (a.title > b.title) ? -1 : 0);
-            // this.galleryEventChanged.next(this.gallery.slice());
             this.galleryEventChanged.next(this.gallery);
             //// console.log(res);
           }, (error: any) => {
@@ -54,10 +42,6 @@ export class ArtService {
     }
 
     addArt(newArt: Gallery) {
-      // if (!newArt) {
-      //   return;
-      // }
-      //// console.log('new', newArt);
       const headers = new HttpHeaders({
         'Content-Type': 'application/json'
       });
@@ -72,7 +56,6 @@ export class ArtService {
           });
     }
 
-    // updateArt(originalArt: Gallery, newArt: Gallery) {
       updateArt(newArt: Gallery, id: string) {
       console.log('updating');
 
